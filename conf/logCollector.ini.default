@@ -1,0 +1,33 @@
+daemon_title="logCollector"
+
+daemon_mode="daemon"
+
+debug_log="local2.warning"
+
+[libs]
+
+[preload]
+;进程化之前load
+inc="const.m"
+
+fun="utils.m"
+
+modules="config.m"
+
+[postload]
+;守护进程成功之后,一些初始化
+
+[workers]
+collector="collector.m*1*9997"
+transfer="transfer.m*1*10001"
+
+[setting]
+
+log_path="/services/adlogs/access.log"
+rotate_dir="/services/adlogs"
+; ext
+rotate_type="number"
+; second
+lc_interval="30"
+; MB
+max_size="512"
