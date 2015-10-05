@@ -60,6 +60,8 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
                 }
                 $rt['size']+=$readSize;
                 fclose($fp0);
+            } else {
+                _notice("[%s][not_need_read]",__FUNCTION__);
             }
         }
 
