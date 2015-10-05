@@ -29,13 +29,16 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
     $rt['filename']=$filename;
     $rt['file']=$filename.'.log';
     $rt['tarball']=$filename.'.tbz2';
+    _info("[%s][open: %s]",__FUNCTION__,$rt['file']);
     $fp=@fopen($rt['file'],'wb');
     do {
         // 获取上次读取的信息
         $lrs=getReadStatus($GLOBALS['readStatusFile']);
+        _notice("[%s][file: %s][offset: %d][inode: %s]",__FUNCTION__,$logFile,$lrs['offset'],$lrs['inode']);
 
         // 获取日志
         if (false!=($logInfo=getLogInfo($logFile,$lrs['offset'],$lrs['inode'],$rotateDir,$rotateType))) {
+            _notice("[%s][file: %s][offset: %d][inode: %s][find_log]",__FUNCTION__,$logInfo['file'],$logInfo['offset'],$logInfo['inode']);
             if ($logInfo['read'] && file_exists($logInfo['file']) && $fp0=@fopen($logInfo['file'],"rb")) {
                 flock($fp0,LOCK_SH);
                 fseek($fp0,$logInfo['offset']);
@@ -69,6 +72,7 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
         if ($rt['count']>0) {   //平均每条大小
             $rt['per']=round($rt['KB']/$rt['count'],2);
         }
+        _notice("[%s][cur_offset: %d][inode: %s][size: %s]",__FUNCTION__,$curOffset,$logInfo['inode'],$rt['MB']);
 
         $end=_microtimeFloat();
         $rt['dura']=round(($end-$start),3);
@@ -81,6 +85,8 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
         _notice("[%s][read: %d][size: %f][per: %f(KB)][dura: %f][continue]",__FUNCTION__,$rt['KB'],$rt['per'],$rt['dura']);
         usleep(30000);  // 30 ms
     } while($rt['dura']<$interval);
+
+    fclose($fp);
 
     return $rt;
 }

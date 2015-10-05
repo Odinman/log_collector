@@ -18,10 +18,12 @@ $GLOBALS['currentTime']=time();
 
 try {
     $deal=0;
-    while($deal<$GLOBALS['queueLoop'] && $GLOBALS['_daemon']['workerRun']) {
+    while($deal<2880 && $GLOBALS['_daemon']['workerRun']) {
         _clearCache();      //清除缓存
 
-        if ($result=collectLogs($GLOBALS['logPath'],$GLOBALS['lcInterval'],$GLOBALS['rotateDir'],$GLOBALS['rotateType']) && $result['count']>0) {
+        _info("[logPath: %s][Interval: %d][rotateDir: %s][rotateTyp: %s]",$GLOBALS['logPath'],$GLOBALS['lcInterval'],$GLOBALS['rotateDir'],$GLOBALS['rotateType']);
+        $result=collectLogs($GLOBALS['logPath'],$GLOBALS['lcInterval'],$GLOBALS['rotateDir'],$GLOBALS['rotateType']);
+        if ($result['count']>0) {
             _warn("[%s][logs: %d][size: %f(KB)][per_log: %f(KB)][duration: %f(ms)]", $result['file'],$result['count'], $result['KB'], $result['per'], $result['dura']);
             //transfer logs
             if (false!=($logTarball=_package($result['file'],$result['tarball']))) {

@@ -23,6 +23,8 @@ transfer="transfer.m*1*10001"
 
 [setting]
 
+log_tag="ads"
+
 log_path="/services/adlogs/access.log"
 rotate_dir="/services/adlogs"
 ; ext
