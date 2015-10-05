@@ -1,3 +1,5 @@
 *.ini
 *.pid
 logCollector
+run/*
+tmp/*
