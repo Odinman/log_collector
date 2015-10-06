@@ -42,9 +42,28 @@ _makeDir($GLOBALS['waitingRoot'],"0755",0,'d');
 // transfer
 $GLOBALS['transfer'][$GLOBALS['logTag']]=array(
     'waiting' => $GLOBALS['waitingRoot'].'/'.$GLOBALS['logTag'],
-    'target' => empty($GLOBALS['OPTIONS']['transfer']['log_tardir'])?'/services/DMLOGS':$GLOBALS['OPTIONS']['transfer']['log_tardir'],
-    'host' => empty($GLOBALS['OPTIONS']['transfer']['log_host'])?null:$GLOBALS['OPTIONS']['transfer']['log_host'],
-    'port' => empty($GLOBALS['OPTIONS']['transfer']['log_port'])?'22':$GLOBALS['OPTIONS']['transfer']['log_port'],
-    'user' => empty($GLOBALS['OPTIONS']['transfer']['log_user'])?'dmreporter':$GLOBALS['OPTIONS']['transfer']['log_user'],
+    //'target' => empty($GLOBALS['OPTIONS']['transfer']['log_tardir'])?'/services/DMLOGS':$GLOBALS['OPTIONS']['transfer']['log_tardir'],
+    //'host' => empty($GLOBALS['OPTIONS']['transfer']['log_host'])?null:$GLOBALS['OPTIONS']['transfer']['log_host'],
+    //'port' => empty($GLOBALS['OPTIONS']['transfer']['log_port'])?'22':$GLOBALS['OPTIONS']['transfer']['log_port'],
+    //'user' => empty($GLOBALS['OPTIONS']['transfer']['log_user'])?'dmreporter':$GLOBALS['OPTIONS']['transfer']['log_user'],
 );
+if (!empty($GLOBALS['OPTIONS']['transfer']['log_tarinfo'])) {
+    $ts=explode(',',$$GLOBALS['OPTIONS']['transfer']['log_tarinfo']);
+    foreach($ts as $tis) {
+        list($tdir,$tuser,$thost,$tport)=explode(':',$tis);
+        $GLOBALS['transfer'][$GLOBALS['logTag']]['tarinfo'][]=array(
+            'target'=> $tdir,
+            'user' =>  $tuser,
+            'host' =>  $thost,
+            'port' =>  $tport,
+        );
+    }
+} else {
+    $GLOBALS['transfer'][$GLOBALS['logTag']]['tarinfo'][]=array(
+        'target' => empty($GLOBALS['OPTIONS']['transfer']['log_tardir'])?'/services/DMLOGS':$GLOBALS['OPTIONS']['transfer']['log_tardir'],
+        'host' => empty($GLOBALS['OPTIONS']['transfer']['log_host'])?null:$GLOBALS['OPTIONS']['transfer']['log_host'],
+        'port' => empty($GLOBALS['OPTIONS']['transfer']['log_port'])?'22':$GLOBALS['OPTIONS']['transfer']['log_port'],
+        'user' => empty($GLOBALS['OPTIONS']['transfer']['log_user'])?'dmreporter':$GLOBALS['OPTIONS']['transfer']['log_user'],
+    );
+}
 _makeDir($GLOBALS['transfer'][$GLOBALS['logTag']]['waiting'],"0755",0,'d');

@@ -35,10 +35,12 @@ try {
         $backupDir=$waitingDir.'/transfered/'.date($GLOBALS['backupType'],$GLOBALS['currentTime']);
         _makeDir($backupDir,"0755",0,'d');
         foreach ($waitingFiles as $waitingFile) {
-            $path=$GLOBALS['transfer'][$configTag]['target'];
-            $host=$GLOBALS['transfer'][$configTag]['host'];
-            $port=$GLOBALS['transfer'][$configTag]['port'];
-            $user=$GLOBALS['transfer'][$configTag]['user'];
+            // 随机一个key
+            $tarInfo=$GLOBALS['transfer'][$configTag]['tarinfo'][array_rand($GLOBALS['transfer'][$configTag]['tarinfo'])];
+            $path=$tarInfo['target'];
+            $host=$tarInfo['host'];
+            $port=$tarInfo['port'];
+            $user=$tarInfo['user'];
             if (true==_transferFile($waitingFile,$path,$host,$port,$user)) {
                 _moveFiles((array)$waitingFile, $backupDir);
                 _notice("[waitingFile: %s][to: %s]",$waitingFile,$backupDir);

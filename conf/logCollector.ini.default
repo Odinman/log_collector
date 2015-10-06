@@ -35,8 +35,8 @@ lc_interval="5"
 max_size="512"
 
 [transfer]
-log_tardir="/services/LOGS"
-log_host="10.0.0.3"
-log_port="22"
-log_user="reporter"
-
+log_tarinfo="/services/LOGS:reporter:10.0.0.3:22"
+;log_tardir="/services/LOGS"
+;log_host="10.0.0.3"
+;log_port="22"
+;log_user="reporter"
