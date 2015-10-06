@@ -30,7 +30,8 @@ try {
         _info("[waitingDir:{$waitingDir}]");
     }
 
-    if (false!=($waitingFiles=_findAllFiles($waitingDir,'tbz2',1,true,10))) {   //一次最多10个
+    $logExt=strtolower($GLOBALS['archiveType'])=='j'?'tbz2':'tgz';
+    if (false!=($waitingFiles=_findAllFiles($waitingDir,$logExt,1,true,10))) {   //一次最多10个
         $backupDir=$waitingDir.'/transfered/'.date($GLOBALS['backupType'],$GLOBALS['currentTime']);
         _makeDir($backupDir,"0755",0,'d');
         foreach ($waitingFiles as $waitingFile) {

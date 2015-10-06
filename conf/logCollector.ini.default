@@ -2,7 +2,7 @@ daemon_title="logCollector"
 
 daemon_mode="daemon"
 
-debug_log="local2.warning"
+debug_log="local1.crit"
 
 [libs]
 
@@ -23,13 +23,20 @@ transfer="transfer.m*1*10001"
 
 [setting]
 
-log_tag="ads"
+log_tag="billing"
 
-log_path="/services/adlogs/access.log"
-rotate_dir="/services/adlogs"
+log_path="/services/logs/billing.log"
+rotate_dir="/services/logs"
 ; ext
 rotate_type="number"
 ; second
-lc_interval="30"
+lc_interval="5"
 ; MB
 max_size="512"
+
+[transfer]
+log_tardir="/services/LOGS"
+log_host="10.0.0.3"
+log_port="22"
+log_user="reporter"
+
