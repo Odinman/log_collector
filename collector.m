@@ -24,9 +24,10 @@ try {
         _info("[logPath: %s][Interval: %d][rotateDir: %s][rotateTyp: %s]",$GLOBALS['logPath'],$GLOBALS['lcInterval'],$GLOBALS['rotateDir'],$GLOBALS['rotateType']);
         $result=collectLogs($GLOBALS['logPath'],$GLOBALS['lcInterval'],$GLOBALS['rotateDir'],$GLOBALS['rotateType']);
         if ($result['count']>0) {
-            _warn("[%s][logs: %d][size: %f(KB)][per_log: %f(KB)][duration: %f(ms)]", $result['file'],$result['count'], $result['KB'], $result['per'], $result['dura']);
+            _warn("[%s][file: %s][logs: %d][size: %f(KB)][per_log: %f(KB)][duration: %f(s)]", $result['file'],$result['read_file'],$result['count'], $result['KB'], $result['per'], $result['dura']);
             //transfer logs
             if (false!=($logTarball=_package($result['file'],$result['tarball']))) {
+                _warn("[%s][package_done]",$logTarball);
                 $logWaiting=$GLOBALS['transfer'][$GLOBALS['logTag']]['waiting'];
                 _moveFiles((array)$logTarball,$logWaiting);
             } else {
@@ -36,7 +37,7 @@ try {
                 _warn("[%s][%s][%s][package_failed]",__FUNCTION__,$result['file'],$result['tarball']);
             }
         } else {
-            _notice("[no_log][duration: %f(ms)]",$result['dura']);
+            _warn("[no_log][duration: %f(s)]",$result['dura']);
         }
         $deal++;
         pcntl_signal_dispatch();
