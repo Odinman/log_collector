@@ -2,7 +2,7 @@ daemon_title="logCollector"
 
 daemon_mode="daemon"
 
-debug_log="local1.crit"
+debug_log="local2.warning"
 
 [libs]
 
@@ -22,20 +22,20 @@ collector="collector.m*1*9997"
 transfer="transfer.m*1*10001"
 
 [setting]
+time_zone="America/Los_Angeles"
+log_tag="ads"
 
-log_tag="billing"
-
-log_path="/services/logs/billing.log"
-rotate_dir="/services/logs"
+log_path="/services/adlogs/access.log"
+rotate_dir="/services/adlogs"
 ; ext
 rotate_type="number"
 ; second
-lc_interval="5"
+lc_interval="15"
 ; MB
 max_size="512"
 
 [transfer]
-log_tarinfo="/services/LOGS:reporter:10.0.0.3:22"
+log_tarinfo="/logBackup/DMLOGS1:dmreporter:ec2-52-24-203-229.us-west-2.compute.amazonaws.com:22,/logBackup/DMLOGS1:dmreporter:ec2-52-89-61-63.us-west-2.compute.amazonaws.com:22"
 ;log_tardir="/services/LOGS"
 ;log_host="10.0.0.3"
 ;log_port="22"

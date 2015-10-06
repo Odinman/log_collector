@@ -9,6 +9,9 @@
   +----------------------------------------------------------------------+
 */
 
+$GLOBALS['timeZone']=empty($GLOBALS['OPTIONS']['setting']['time_zone'])?'Asia/Shanghai':$GLOBALS['OPTIONS']['setting']['time_zone'];
+date_default_timezone_set($GLOBALS['timeZone']);
+
 $GLOBALS['archiveType']=empty($GLOBALS['OPTIONS']['setting']['archive_type'])?'z':$GLOBALS['OPTIONS']['setting']['archive_type'];
 
 $GLOBALS['logPath']=empty($GLOBALS['OPTIONS']['setting']['log_path'])?'/services/adlogs/access.log':$GLOBALS['OPTIONS']['setting']['log_path'];
