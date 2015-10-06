@@ -37,6 +37,8 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
         // 获取上次读取的信息
         $lrs=getReadStatus($GLOBALS['readStatusFile']);
         _info("[%s][file: %s][last_offset: %d][last_inode: %s]",__FUNCTION__,$logFile,$lrs['offset'],$lrs['inode']);
+        $rt['last_offset']=$lrs['offset'];
+        $rt['last_inode']=$lrs['inode'];
 
         // 获取日志
         $count=0;
@@ -66,6 +68,8 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
                 $rt['count']+=$count;
                 fclose($fp0);
             } else {
+                $rt['file_size']=$logInfo['size'];
+                $rt['file_inode']=$logInfo['inode'];
                 _info("[%s][file: %s][offset: %d][filesize: %d][not_need_read]",__FUNCTION__,$logInfo['file'],$logInfo['offset'],$logInfo['size']);
             }
         } else {
@@ -126,6 +130,7 @@ function getLogInfo($logFile,$lastOff,$lastINode,$rotateDir,$rotateType) {
             $rotateDir=$lpi['dirname'];
         }
 
+        clearstatcache();
         //log inode 信息
         $logINode=fileinode($logFile);
         //日志文件信息
