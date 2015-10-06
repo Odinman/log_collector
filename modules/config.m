@@ -48,7 +48,7 @@ $GLOBALS['transfer'][$GLOBALS['logTag']]=array(
     //'user' => empty($GLOBALS['OPTIONS']['transfer']['log_user'])?'dmreporter':$GLOBALS['OPTIONS']['transfer']['log_user'],
 );
 if (!empty($GLOBALS['OPTIONS']['transfer']['log_tarinfo'])) {
-    $ts=explode(',',$$GLOBALS['OPTIONS']['transfer']['log_tarinfo']);
+    $ts=explode(',',$GLOBALS['OPTIONS']['transfer']['log_tarinfo']);
     foreach($ts as $tis) {
         list($tdir,$tuser,$thost,$tport)=explode(':',$tis);
         $GLOBALS['transfer'][$GLOBALS['logTag']]['tarinfo'][]=array(

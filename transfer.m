@@ -45,7 +45,7 @@ try {
                 _moveFiles((array)$waitingFile, $backupDir);
                 _notice("[waitingFile: %s][to: %s]",$waitingFile,$backupDir);
             } else {
-                _notice("[waitingFile: %s][transfer_failed]",$waitingFile);
+                _notice("[waitingFile: %s][path: %s][user: %s][host: %s][port: %s][transfer_failed]",$waitingFile,$path,$user,$host,$port);
             }
         }
         pcntl_signal_dispatch();
