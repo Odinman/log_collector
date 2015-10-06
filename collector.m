@@ -31,13 +31,13 @@ try {
                 $logWaiting=$GLOBALS['transfer'][$GLOBALS['logTag']]['waiting'];
                 _moveFiles((array)$logTarball,$logWaiting);
             } else {
-                if (file_exists($result['file']) && 0>=filesize($result['file'])) {
-                    @exec("{$GLOBALS['_sys']['rm']} -f {$result['file']}");
-                }
                 _warn("[logs: %d][size: %f(KB)][per_log: %f(KB)][duration: %f(s)][%s][%s][failed!]", $result['count'], $result['KB'], $result['per'], $result['dura'],$result['read_file'],$logTarball);
             }
         } else {
-            _notice("[%s][no_log][duration: %f(s)]",$result['file'],$result['dura']);
+            _notice("[no_log][duration: %f(s)][%s]",$result['dura'],$GLOBALS['logPath']);
+        }
+        if (file_exists($result['file'])) {
+            @exec("{$GLOBALS['_sys']['rm']} -f {$result['file']}");
         }
         $deal++;
         pcntl_signal_dispatch();

@@ -28,7 +28,7 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
     $filename=$GLOBALS['logTag'].$fileTag;
     $rt['filename']=$filename;
     $rt['file']=$filename.'.log';
-    $rt['tarball']=$GLOBALS['archiveType']=='j'?$filename.'.tbz2':$filename.'.tgz';
+    $rt['tarball']=strtolower($GLOBALS['archiveType'])=='j'?$filename.'.tbz2':$filename.'.tgz';
     _info("[%s][open: %s]",__FUNCTION__,$rt['file']);
     $fp=@fopen($rt['file'],'wb');
 
@@ -43,7 +43,7 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
         if (false!=($logInfo=getLogInfo($logFile,$lrs['offset'],$lrs['inode'],$rotateDir,$rotateType))) {
             if ($logInfo['read'] && file_exists($logInfo['file']) && $fp0=@fopen($logInfo['file'],"rb")) {
                 $rt['read_file']=$logInfo['file'];
-                _notice("[%s][reading_file: %s][size: %d][offset: %d][inode: %s][with_new_log]",__FUNCTION__,$logInfo['file'],$logInfo['size'],$logInfo['offset'],$logInfo['inode']);
+                _info("[%s][reading_file: %s][size: %d][offset: %d][inode: %s][with_new_log]",__FUNCTION__,$logInfo['file'],$logInfo['size'],$logInfo['offset'],$logInfo['inode']);
                 flock($fp0,LOCK_SH);
                 fseek($fp0,$logInfo['offset']);
                 while (!feof($fp0)) {
@@ -139,7 +139,7 @@ function getLogInfo($logFile,$lastOff,$lastINode,$rotateDir,$rotateType) {
             'read' => false,  //默认不读取
         );
 
-        _info("[%s][inode: %s][last_inode: %s][logsize: %s][lastoff: %d]",__FUNCTION__,$logINode,$lastINode,$logSize,$lastOff);
+        _info("[%s][inode: %s][last_inode: %s][logsize: %d][lastoff: %d]",__FUNCTION__,$logINode,$lastINode,$logSize,$lastOff);
 
         if (empty($lastINode)) {    //如果inode为空,就当作第一次读取
             $rt['inode']=$logINode;
