@@ -28,7 +28,7 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
     $filename=$GLOBALS['logTag'].$fileTag;
     $rt['filename']=$filename;
     $rt['file']=$filename.'.log';
-    $rt['tarball']=$filename.'.tbz2';
+    $rt['tarball']=$GLOBALS['archiveType']=='j'?$filename.'.tbz2':$filename.'.tgz';
     _info("[%s][open: %s]",__FUNCTION__,$rt['file']);
     $fp=@fopen($rt['file'],'wb');
 
@@ -66,7 +66,7 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
                 $rt['count']+=$count;
                 fclose($fp0);
             } else {
-                _notice("[%s][file: %s][offset: %d][filesize: %d][not_need_read]",__FUNCTION__,$logInfo['file'],$logInfo['offset'],$logInfo['size']);
+                _info("[%s][file: %s][offset: %d][filesize: %d][not_need_read]",__FUNCTION__,$logInfo['file'],$logInfo['offset'],$logInfo['size']);
             }
         } else {
             _warn("[%s][not_found_file]",__FUNCTION__);
@@ -94,7 +94,7 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
             _warn("[%s][%s][read_size: %f(MB)][max_size: %d(MB)][dura: %f(s)][exceed_max]",__FUNCTION__,$logInfo['file'],$rt['MB'],$GLOBALS['maxSize'],$rt['dura']);
             $continue=false;
         } else {
-            _notice("[%s][read: %d(KB)][size: %f(KB)][per: %f(KB)][dura: %f(s)][continue]",__FUNCTION__,$rt['KB'],round($logInfo['size']/1024,2),$rt['per'],$rt['dura']);
+            _info("[%s][read: %d(KB)][size: %f(KB)][per: %f(KB)][dura: %f(s)][continue]",__FUNCTION__,$rt['KB'],round($logInfo['size']/1024,2),$rt['per'],$rt['dura']);
         }
         usleep(30000);  // 30 ms
         //sleep(10);  // 30 ms

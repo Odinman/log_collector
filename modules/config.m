@@ -9,6 +9,8 @@
   +----------------------------------------------------------------------+
 */
 
+$GLOBALS['archiveType']=empty($GLOBALS['OPTIONS']['setting']['archive_type'])?'z':$GLOBALS['OPTIONS']['setting']['archive_type'];
+
 $GLOBALS['logPath']=empty($GLOBALS['OPTIONS']['setting']['log_path'])?'/services/adlogs/access.log':$GLOBALS['OPTIONS']['setting']['log_path'];
 $GLOBALS['rotateDir']=empty($GLOBALS['OPTIONS']['setting']['rotate_dir'])?'/services/adlogs':$GLOBALS['OPTIONS']['setting']['rotate_dir'];
 $GLOBALS['rotateType']=empty($GLOBALS['OPTIONS']['setting']['rotate_type'])?'number':$GLOBALS['OPTIONS']['setting']['rotate_type'];
