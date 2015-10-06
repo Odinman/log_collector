@@ -32,8 +32,10 @@ try {
 
     $logExt=strtolower($GLOBALS['archiveType'])=='j'?'tbz2':'tgz';
     if (false!=($waitingFiles=_findAllFiles($waitingDir,$logExt,1,true,10))) {   //一次最多10个
-        $backupDir=$waitingDir.'/transfered/'.date($GLOBALS['backupType'],$GLOBALS['currentTime']);
-        _makeDir($backupDir,"0755",0,'d');
+        if ($GLOBALS['enableBackup']==true) {
+            $backupDir=$waitingDir.'/transfered/'.date($GLOBALS['backupType'],$GLOBALS['currentTime']);
+            _makeDir($backupDir,"0755",0,'d');
+        }
         foreach ($waitingFiles as $waitingFile) {
             // 随机一个key
             $tarInfo=$GLOBALS['transfer'][$configTag]['tarinfo'][array_rand($GLOBALS['transfer'][$configTag]['tarinfo'])];
@@ -42,8 +44,10 @@ try {
             $port=$tarInfo['port'];
             $user=$tarInfo['user'];
             if (true==_transferFile($waitingFile,$path,$host,$port,$user)) {
-                _moveFiles((array)$waitingFile, $backupDir);
-                _notice("[waitingFile: %s][to: %s]",$waitingFile,$backupDir);
+                if ($GLOBALS['enableBackup']==true) {
+                    _moveFiles((array)$waitingFile, $backupDir);
+                    _notice("[waitingFile: %s][to: %s]",$waitingFile,$backupDir);
+                }
             } else {
                 _notice("[waitingFile: %s][path: %s][user: %s][host: %s][port: %s][transfer_failed]",$waitingFile,$path,$user,$host,$port);
             }
