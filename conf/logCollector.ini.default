@@ -16,27 +16,33 @@ modules="config.m"
 
 [postload]
 ;守护进程成功之后,一些初始化
-modules="collector_init.m"
 
 [workers]
 collector="collector.m*1*9997"
 transfer="transfer.m*1*10001"
 
+[collector_config]
+;可针对每种worker设置初始化脚本
+modules="collector_init.m"
+
 [setting]
-time_zone="America/Los_Angeles"
+
+time_zone="Asia/Shanghai"
+
+waiting_root="/services/waiting"
 
 [log1]
 ; 固定配置log+sn,sn对应collector/transfer的sn
 
-log_tag="ads"
+log_tag="common"
 
-log_path="/services/adlogs/access.log"
-rotate_dir="/services/adlogs"
+log_path="/services/qinhucloud/uc/logs/access.log"
+;rotate_dir="/services/qinhucloud/uc/logs"
 ; ext
 rotate_type="number"
 ; second
-lc_interval="15"
+lc_interval="10"
 ; MB
 max_size="512"
 
-log_tarinfo="/logBackup/DMLOGS1:dmreporter:ec2-52-24-203-229.us-west-2.compute.amazonaws.com:22,/logBackup/DMLOGS1:dmreporter:ec2-52-89-61-63.us-west-2.compute.amazonaws.com:22"
+log_tarinfo="/services/LOGTEMP:log_collector:10.0.0.2:22"
