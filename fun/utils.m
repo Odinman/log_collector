@@ -23,7 +23,7 @@ function collectLogs($logFile,$interval,$rotateDir,$rotateType,$maxSize) {
 
     $start=_microtimeFloat();
 
-    $filename=sprintf("%s_%s_s",$GLOBALS['logTag'],date('Ymd_His_'.substr((string)microtime(), 2, 7).'_T',time()),$GLOBALS['hostName']);
+    $filename=sprintf("%s_%s_%s",$GLOBALS['logTag'],date('Ymd_His_'.substr((string)microtime(), 2, 7).'_T',time()),$GLOBALS['hostName']);
     $rt['filename']=$filename;
     $rt['file']=$filename.'.log';
     $rt['tarball']=strtolower($GLOBALS['archiveType'])=='j'?$filename.'.tbz2':$filename.'.tgz';

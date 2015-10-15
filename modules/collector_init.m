@@ -20,7 +20,11 @@ if (false!=($wConfig=$GLOBALS['OPTIONS'][$confTag])) {
     $GLOBALS['archiveType']=empty($wConfig['archive_type'])?'z':$wConfig['archive_type'];
 
     $GLOBALS['logPath']=empty($wConfig['log_path'])?'/services/qinhucloud/uc/logs/access.log':$wConfig['log_path'];
-    $GLOBALS['rotateDir']=empty($wConfig['rotate_dir'])?'/services/qinhucloud/uc/logs':$wConfig['rotate_dir'];
+    $GLOBALS['rotateDir']=empty($wConfig['rotate_dir'])?null:$wConfig['rotate_dir'];
+    if (empty($GLOBALS['rotateDir'])) {
+        $rpf=pathinfo($GLOBALS['logPath']);
+        $GLOBALS['rotateDir']=$rpf['dirname'];
+    }
     $GLOBALS['rotateType']=empty($wConfig['rotate_type'])?'number':$wConfig['rotate_type'];
     $GLOBALS['lcInterval']=empty($wConfig['lc_interval'])?10:(int)$wConfig['lc_interval'];
 
@@ -51,7 +55,7 @@ if (false!=($wConfig=$GLOBALS['OPTIONS'][$confTag])) {
                 'user' =>  $tuser,
                 'host' =>  $thost,
                 'port' =>  $tport,
-                'key'  => $tkey,
+                'key'  => $GLOBALS['_daemon']['_WORKERROOT_'].'/'.$tkey,
             );
         }
     }
