@@ -47,3 +47,11 @@ lc_interval="10"
 max_size="64"
 
 log_tarinfo="/services/LOGTEMP:collector:10.0.0.2:22:identity/id_rsa"
+
+[uc]
+log_format="JSON"
+;log_format="CSV"
+;delimiter=","
+time_format="RFC3339Nano"
+ts_key="t"
+;ts_offset="1"

@@ -235,21 +235,41 @@ function saveReadStatus($statusFile,$offset,$inode) {
 
 /* }}} */
 
-/* {{{ function getFileTS($tag,$content,$dts)
+/* {{{ function getLogTS($tag,$content,$dts)
  *
  */
-function getFileTS($tag,$content,$dts) {
+function getLogTS($tag,$content,$dts) {
     $rt=0;
 
     do {
         if (!isset($GLOBALS['OPTIONS'][$tag])) {    //如果没有专门的配置,直接用文件的修改时间
+            break;
+        }
+        $logSetting=$GLOBALS['OPTIONS'][$tag];
+        switch(strtolower($logSetting['log_format'])) { //日志格式
+        case 'csv': //时间
+            if (empty($logSetting['delimiter'])) {
+                $logSetting['delimiter']=',';
+            }
+            if (isset($logSetting['ts_offset']) && false!=($cps=str_getcsv($content,$logSetting['delimiter']))) {  // csv要配置offset
+                $tsStr=$cps[$logSetting['ts_offset']];
+            }
+            $rt=_getTS($tsStr,$logSetting['time_format']);
+            break;
+        case 'json':
+            if (isset($logSetting['ts_key']) && false!=($jps=json_decode($content,true))) {  // csv要配置key
+                $tsStr=$jps[$logSetting['ts_key']];
+            }
+            $rt=_getTS($tsStr,$logSetting['time_format']);
+            break;
+        default:
             $rt=$dts;
             break;
         }
     } while(false);
 
     if ($rt<=0) {
-        $rt=time();
+        $rt=$dts>0?$dts:time();
     }
 
     return $rt;

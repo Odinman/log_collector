@@ -50,7 +50,7 @@ try {
                 _info("[%s][begin]",$logFile);
                 while(!feof($tmpFp)) {
                     $content=trim(fgets($tmpFp,10240));
-                    if (!empty($content) && 0<($ts=getFileTS($logTag,$content,$fileTS))) {
+                    if (!empty($content) && 0<($ts=getLogTS($logTag,$content,$fileTS))) {
                         $logCount++;
                         $saveFile=sprintf("%s/%s/%s",$GLOBALS['logSaveRoot'],$logTag,date('Ym/d/H.log',$ts));
                         _makeDir($GLOBALS['saveFile'],"0755",0,'f');
