@@ -2,7 +2,7 @@ daemon_title="logCollector"
 
 daemon_mode="daemon"
 
-debug_log="local2.warning"
+debug_log="local1.crit"
 
 [libs]
 
@@ -21,9 +21,10 @@ modules="config.m"
 collector="collector.m*1*9997"
 transfer="transfer.m*1*10001"
 
-[collector_config]
+[worker_config]
 ;可针对每种worker设置初始化脚本
-modules="collector_init.m"
+collector="modules/collector_init.m"
+transfer="modules/collector_init.m"
 
 [setting]
 
@@ -34,7 +35,7 @@ waiting_root="/services/waiting"
 [log1]
 ; 固定配置log+sn,sn对应collector/transfer的sn
 
-log_tag="common"
+log_tag="uc"
 
 log_path="/services/qinhucloud/uc/logs/access.log"
 ;rotate_dir="/services/qinhucloud/uc/logs"
@@ -43,6 +44,6 @@ rotate_type="number"
 ; second
 lc_interval="10"
 ; MB
-max_size="512"
+max_size="64"
 
-log_tarinfo="/services/LOGTEMP:log_collector:10.0.0.2:22"
+log_tarinfo="/services/LOGTEMP:collector:10.0.0.2:22:identity/id_rsa"
