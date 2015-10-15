@@ -24,4 +24,4 @@ $GLOBALS['maxLogs']=empty($GLOBALS['OPTIONS']['setting']['max_logs'])?10:$GLOBAL
 
 // log save
 $GLOBALS['logSaveRoot']=empty($GLOBALS['OPTIONS']['setting']['log_save_root'])?'/services/QHLOGS':$GLOBALS['OPTIONS']['setting']['logSaveRoot'];
-_makeDir($GLOBALS['logSavePath'],"0755",0,'d');
+_makeDir($GLOBALS['logSaveRoot'],"0755",0,'d');

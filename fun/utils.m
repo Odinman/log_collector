@@ -283,7 +283,7 @@ function getLogTS($tag,$content,$dts) {
 function saveLogToFile($file,$content) {
     $rt=false;
 
-    try {
+    do {
         if (isset($GLOBALS['_CACHE_']['_fhs_'][$file]) && is_resource($GLOBALS['_CACHE_']['_fhs_'][$file])) {
             fputs($GLOBALS['_CACHE_']['_fhs_'][$file],$content."\n");
             $rt=true;
@@ -295,9 +295,7 @@ function saveLogToFile($file,$content) {
             $GLOBALS['_CACHE_']['_fhs_'][$file]=$fp;
         }
         $rt=true;
-    } catch (Exception $e) {
-        _error("Exception: %s", $e->getMessage());
-    }
+    } while(false);
 
     return $rt;
 }
