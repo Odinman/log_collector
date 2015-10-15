@@ -59,4 +59,8 @@ if (false!=($wConfig=$GLOBALS['OPTIONS'][$confTag])) {
             );
         }
     }
+} else {
+    _warn("[not_found_conf]");
+    $GLOBALS['_daemon']['workerRun']=false;
+    sleep(5);
 }

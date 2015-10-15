@@ -17,31 +17,61 @@
 $GLOBALS['currentTime']=time();
 
 try {
-    $deal=0;
-    while($deal<2880 && $GLOBALS['_daemon']['workerRun']) {
-        _clearCache();      //清除缓存
-
-        _info("[logPath: %s][Interval: %d][rotateDir: %s][rotateTyp: %s]",$GLOBALS['logPath'],$GLOBALS['lcInterval'],$GLOBALS['rotateDir'],$GLOBALS['rotateType']);
-        $result=collectLogs($GLOBALS['logPath'],$GLOBALS['lcInterval'],$GLOBALS['rotateDir'],$GLOBALS['rotateType']);
-        if ($result['count']>0) {
-            _notice("[%s][file: %s][logs: %d][size: %f(KB)][per_log: %f(KB)][duration: %f(s)]", $result['file'],$result['read_file'],$result['count'], $result['KB'], $result['per'], $result['dura']);
-            //transfer logs
-            if (false!=($logTarball=_package($result['file'],$result['tarball'],$GLOBALS['archiveType']))) {
-                _warn("[logs: %d][size: %f(KB)][per_log: %f(KB)][duration: %f(s)][%s][%s][done]", $result['count'], $result['KB'], $result['per'], $result['dura'],$result['read_file'],$logTarball);
-                $logWaiting=$GLOBALS['transfer'][$GLOBALS['logTag']]['waiting'];
-                _moveFiles((array)$logTarball,$logWaiting);
-            } else {
-                _warn("[logs: %d][size: %f(KB)][per_log: %f(KB)][duration: %f(s)][%s][%s][failed!]", $result['count'], $result['KB'], $result['per'], $result['dura'],$result['read_file'],$logTarball);
-            }
-        } else {
-            _notice("[no_log][duration: %f(s)][%s]",$result['dura'],$GLOBALS['logPath']);
-        }
-        if (file_exists($result['file'])) {
-            @exec("{$GLOBALS['_sys']['rm']} -f {$result['file']}");
-        }
-        $deal++;
-        pcntl_signal_dispatch();
+    _clearCache();      //清除缓存
+    $tmpFile="tmp{$GLOBALS['_daemon']['sn']}.log";
+    $tarDir=$GLOBALS['processRoot'];
+    if (!is_dir($tarDir)) {
+        throw new Exception(_info("[%s not exists]",$tarDir));
+    } else {
+        _info("[%s][scan_it]",$tarDir);
     }
+
+    if (false!=($logFiles=_findAllFiles($tarDir,'',1,true,$GLOBALS['maxLogs']))) {
+        $fileCount=0;
+        $totalFile=count($logFiles);
+        $importStart=_microtimeFloat();
+        foreach ($logFiles as $fkey=>$logFile) {
+            $fileStart=_microtimeFloat();
+            $fileCount++;
+            $fileTs=0;
+            $logCount=0;
+            //这些file应该已经经过验证了
+            $logInfo=pathinfo($logFile);
+            $logName="{$logInfo['filename']}.log";
+            list($logTag)=explode('_',$logName);
+            //根据后缀决定解压方式
+            if ($logInfo['extension']=='tbz2') {
+                $command="{$GLOBALS['_sys']['bzcat']} $logFile | {$GLOBALS['_sys']['tar']} xOf - $logName > {$tmpFile} 2>/dev/null";
+            } else {
+                $command="{$GLOBALS['_sys']['gzcat']} $logFile | {$GLOBALS['_sys']['tar']} xOf - $logName > {$tmpFile} 2>/dev/null";
+            }
+            @exec($command,$arrlines,$stat);
+            if ($stat==0 && $tmpFp=@fopen($tmpFile,"rb")) {    //解压成功并且读取成功
+                _info("[%s][begin]",$logFile);
+                while(!feof($tmpFp)) {
+                    $content=trim(fgets($tmpFp,10240));
+                    if (!empty($content)) {
+                        $logCount++;
+                        processLog($logTag,$content);
+                    }
+                    unset($content);
+                }
+
+                fclose($tmpFp);
+            }
+
+            $fileEnd=_microtimeFloat();
+            $fileDura=round(($fileEnd-$fileStart),3);
+            $importDura=round(($fileEnd-$importStart),3);
+            _warn("[%s][%s][dura: %s][%s/%s][import_dura: %s]",$logName,$logCount,$fileDura,$fileCount,$totalFile,$importDura);
+        }
+        _notice("[deal_log_files: %s]",$fileCount);
+        pcntl_signal_dispatch();
+    } else {
+        _info("[nothing_to_do]");
+    }
+
+    pcntl_signal_dispatch();
 
 } catch (Exception $e) {
     _error("[Caught Exception: %s]", $e->getMessage());

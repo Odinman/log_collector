@@ -18,3 +18,10 @@ $GLOBALS['hostName']=@exec("/bin/hostname -s");
 $GLOBALS['waitingRoot']=empty($GLOBALS['OPTIONS']['setting']['waiting_root'])?'/services/waiting':$GLOBALS['OPTIONS']['setting']['waiting_root'];
 _makeDir($GLOBALS['waitingRoot'],"0755",0,'d');
 
+// waiting to process
+$GLOBALS['processRoot']=empty($GLOBALS['OPTIONS']['setting']['process_root'])?'/services/LOGTEMP':$GLOBALS['OPTIONS']['setting']['process_root'];
+$GLOBALS['maxLogs']=empty($GLOBALS['OPTIONS']['setting']['max_logs'])?10:$GLOBALS['OPTIONS']['setting']['max_logs'];
+
+// log backup
+$GLOBALS['logBackupPath']=empty($GLOBALS['OPTIONS']['setting']['log_backup_path'])?'/services/QHLOGS':$GLOBALS['OPTIONS']['setting']['logBackupPath'];
+_makeDir($GLOBALS['logBackupPath'],"0755",0,'d');

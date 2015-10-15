@@ -235,3 +235,19 @@ function saveReadStatus($statusFile,$offset,$inode) {
 
 /* }}} */
 
+/* {{{ function processLog($tag,$content)
+ *
+ */
+function processLog($tag,$content) {
+    $rt=false;
+
+    try {
+    } catch (Exception $e) {
+        _error("Exception: %s", $e->getMessage());
+    }
+
+    return $rt;
+}
+
+/* }}} */
+
