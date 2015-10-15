@@ -235,13 +235,46 @@ function saveReadStatus($statusFile,$offset,$inode) {
 
 /* }}} */
 
-/* {{{ function processLog($tag,$content)
+/* {{{ function getFileTS($tag,$content,$dts)
  *
  */
-function processLog($tag,$content) {
+function getFileTS($tag,$content,$dts) {
+    $rt=0;
+
+    do {
+        if (!isset($GLOBALS['OPTIONS'][$tag])) {    //如果没有专门的配置,直接用文件的修改时间
+            $rt=$dts;
+            break;
+        }
+    } while(false);
+
+    if ($rt<=0) {
+        $rt=time();
+    }
+
+    return $rt;
+}
+
+/* }}} */
+
+/* {{{ function saveLogToFile($file,$content)
+ *
+ */
+function saveLogToFile($file,$content) {
     $rt=false;
 
     try {
+        if (isset($GLOBALS['_CACHE_']['_fhs_'][$file]) && is_resource($GLOBALS['_CACHE_']['_fhs_'][$file])) {
+            fputs($GLOBALS['_CACHE_']['_fhs_'][$file],$content."\n");
+            $rt=true;
+            break;
+        }
+        _makeDir($file,"0755",0,'f');
+        if ($fp=@fopen($file,"a+")) {
+            fputs($fp,$content."\n");
+            $GLOBALS['_CACHE_']['_fhs_'][$file]=$fp;
+        }
+        $rt=true;
     } catch (Exception $e) {
         _error("Exception: %s", $e->getMessage());
     }

@@ -33,7 +33,7 @@ try {
         foreach ($logFiles as $fkey=>$logFile) {
             $fileStart=_microtimeFloat();
             $fileCount++;
-            $fileTs=0;
+            $fileTS=filemtime($logFile);
             $logCount=0;
             //这些file应该已经经过验证了
             $logInfo=pathinfo($logFile);
@@ -50,9 +50,11 @@ try {
                 _info("[%s][begin]",$logFile);
                 while(!feof($tmpFp)) {
                     $content=trim(fgets($tmpFp,10240));
-                    if (!empty($content)) {
+                    if (!empty($content) && 0<($ts=getFileTS($logTag,$content,$fileTS))) {
                         $logCount++;
-                        processLog($logTag,$content);
+                        $saveFile=sprintf("%s/%s/%s",$GLOBALS['logSaveRoot'],$logTag,date('Ym/d/H.log',$ts));
+                        _makeDir($GLOBALS['saveFile'],"0755",0,'f');
+                        saveLogToFile($saveFile,$content);
                     }
                     unset($content);
                 }
