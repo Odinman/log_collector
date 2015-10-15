@@ -20,8 +20,7 @@ try {
     /* {{{ 处理传送文件
      */
 
-    //具体处理哪个目录由自身进程序列号以及配置决定
-    $configTag=$GLOBALS['reporting']["#{$GLOBALS['_daemon']['sn']}"];
+    $configTag=$GLOBALS['logTag'];
 
     $waitingDir=$GLOBALS['transfer'][$configTag]['waiting'];
     if (!is_dir($waitingDir)) {
@@ -43,11 +42,9 @@ try {
             $host=$tarInfo['host'];
             $port=$tarInfo['port'];
             $user=$tarInfo['user'];
-            if (true==_transferFile($waitingFile,$path,$host,$port,$user)) {
-                if ($GLOBALS['enableBackup']==true) {
-                    _moveFiles((array)$waitingFile, $backupDir);
-                    _notice("[waitingFile: %s][to: %s]",$waitingFile,$backupDir);
-                }
+            $keyFile=$tarInfo['key'];
+            if (true==_transferFile($waitingFile,$path,$host,$port,$user,$backupDir,null,$keyFile)) {
+                _info("[waitingFile: %s][path: %s][user: %s][host: %s][port: %s][transfer_success]",$waitingFile,$path,$user,$host,$port);
             } else {
                 _notice("[waitingFile: %s][path: %s][user: %s][host: %s][port: %s][transfer_failed]",$waitingFile,$path,$user,$host,$port);
             }

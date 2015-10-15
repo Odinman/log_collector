@@ -45,12 +45,13 @@ if (false!=($wConfig=$GLOBALS['OPTIONS'][$confTag])) {
     if (!empty($wConfig['log_tarinfo'])) {
         $ts=explode(',',$wConfig['log_tarinfo']);
         foreach($ts as $tis) {
-            list($tdir,$tuser,$thost,$tport)=explode(':',$tis);
+            list($tdir,$tuser,$thost,$tport,$tkey)=explode(':',$tis);
             $GLOBALS['transfer'][$GLOBALS['logTag']]['tarinfo'][]=array(
                 'target'=> $tdir,
                 'user' =>  $tuser,
                 'host' =>  $thost,
                 'port' =>  $tport,
+                'key'  => $tkey,
             );
         }
     }
