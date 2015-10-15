@@ -53,13 +53,15 @@ try {
                     if (!empty($content) && 0<($ts=getLogTS($logTag,$content,$fileTS))) {
                         $logCount++;
                         $saveFile=sprintf("%s/%s/%s",$GLOBALS['logSaveRoot'],$logTag,date('Ym/d/H.log',$ts));
-                        _makeDir($GLOBALS['saveFile'],"0755",0,'f');
+                        _makeDir($saveFile,"0755",0,'f');
                         saveLogToFile($saveFile,$content);
                     }
                     unset($content);
                 }
 
                 fclose($tmpFp);
+
+                @exec("{$GLOBALS['_sys']['rm']} -f {$logFile}");
             }
 
             $fileEnd=_microtimeFloat();
