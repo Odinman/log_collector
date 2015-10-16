@@ -53,7 +53,7 @@ try {
                     if (!empty($content) && 0<($ts=getLogTS($logTag,$content,$fileTS))) {
                         $logCount++;
                         $saveFile=sprintf("%s/%s/%s",$GLOBALS['logSaveRoot'],$logTag,date('Ym/d/H.\l\o\g',$ts));
-                        _notice("[count: %s][%s][save_file: %s]",$logCount,$ts,$saveFile);
+                        _info("[count: %s][%s][save_file: %s]",$logCount,$ts,$saveFile);
                         _makeDir($saveFile,"0755",0,'f');
                         saveLogToFile($saveFile,$content);
                     }
