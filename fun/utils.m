@@ -162,7 +162,7 @@ function getLogInfo($logFile,$lastOff,$lastINode,$rotateDir,$rotateType) {
         } else {    //不是当前文件,需要之前的文件
             $rt['read']=true;  //如果没找到旧文件,则直接读取当前文件
             $rt['offset']=0;
-            for ($i=0;$i<5;$i++) {  //最多找五个rotate文件
+            for ($i=0;$i<10;$i++) {  //最多找10个rotate文件
                 switch ($rotateType) {
                 case 'number':
                 default:
