@@ -199,7 +199,7 @@ function getLogInfo($logFile,$lastOff,$lastINode,$rotateDir,$rotateType) {
 }
 /* }}} */
 
-/* {{{ getReadStatus
+/* {{{ function getReadStatus($statusFile)
  */
 function getReadStatus($statusFile) {
     $rt=false;
