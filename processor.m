@@ -48,6 +48,7 @@ try {
             @exec($command,$arrlines,$stat);
             if ($stat==0 && $tmpFp=@fopen($tmpFile,"rb")) {    //解压成功并且读取成功
                 _info("[%s][begin]",$logFile);
+                // save to local
                 while(!feof($tmpFp)) {
                     $content=trim(fgets($tmpFp,10240));
                     if (!empty($content) && 0<($ts=getLogTS($logTag,$content,$fileTS))) {
@@ -61,6 +62,9 @@ try {
                 }
 
                 fclose($tmpFp);
+
+                // save log to hdfs
+                saveFileToHDFS($logTag,$tmpFile,$ts);
 
                 @exec("{$GLOBALS['_sys']['rm']} -f {$logFile}");
             }

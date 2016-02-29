@@ -25,3 +25,7 @@ $GLOBALS['maxLogs']=empty($GLOBALS['OPTIONS']['setting']['max_logs'])?10:$GLOBAL
 // log save
 $GLOBALS['logSaveRoot']=empty($GLOBALS['OPTIONS']['setting']['log_save_root'])?'/services/QHLOGS':$GLOBALS['OPTIONS']['setting']['logSaveRoot'];
 _makeDir($GLOBALS['logSaveRoot'],"0755",0,'d');
+
+// hdfs
+$GLOBALS['webHDFSURL']=empty($GLOBALS['OPTIONS']['setting']['webhdfs_url'])?'http://10.0.0.64:50070/webhdfs/v1':$GLOBALS['OPTIONS']['setting']['webhdfs_url'];
+$GLOBALS['webHDFSUser']=empty($GLOBALS['OPTIONS']['setting']['webhdfs_user'])?'hdfs':$GLOBALS['OPTIONS']['setting']['webhdfs_user'];

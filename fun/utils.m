@@ -302,3 +302,72 @@ function saveLogToFile($file,$content) {
 
 /* }}} */
 
+/* {{{ function saveFileToHDFS($file,$ts=0)
+ *
+ */
+function saveFileToHDFS($logTag,$file,$ts=0) {
+    $rt=false;
+
+    try {
+        $hdfsDir=sprintf("%s/%s/%s",$GLOBALS['logSaveRoot'],$logTag,date('Ym/d',$ts));
+        $hdfsFile=sprintf("%s",date('H.\l\o\g',$ts));
+        $hdfsPath=sprintf("%s/%s",$hdfsDir,$hdfsFile);
+
+        $ch=curl_init();
+        //curl_setopt($ch, CURLOPT_URL, $GLOBALS['webHDFSURL']);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        if ($GLOBALS[_HDFS_][$hdfsDir]!==true) {    //建目录
+            $opURL=sprintf("%s%s?op=MKDIRS&user.name=%s",$GLOBALS['webHDFSURL'],$hdfsDir,$GLOBALS['webHDFSUser']);
+            curl_setopt($ch, CURLOPT_URL, $opURL);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            $result=curl_exec($ch);
+            $info = curl_getinfo($ch);
+            if ($info['http_code']!=200) { //失败
+                throw new Exception(_info("[%s][%s][create_dir_failed: %s]",__FUNCTION__,$hdfsDir,$result));
+            }
+            $GLOBALS[_HDFS_][$hdfsDir]=true;
+        }
+
+        //查看文件是否存在
+        $create=false;
+        if ($GLOBALS[_HDFS_][$hdfsPath]!==true) {    //建目录
+            $opURL=sprintf("%s%s?op=GETFILESTATUS&user.name=%s",$GLOBALS['webHDFSURL'],$hdfsPath,$GLOBALS['webHDFSUser']);
+            curl_setopt($ch, CURLOPT_URL, $opURL);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            $result=curl_exec($ch);
+            $info = curl_getinfo($ch);
+            if ($info['http_code']!=200) { //不存在, 创建
+                $create=true;
+            }
+        }
+
+        if ($create===true) {
+            $opURL=sprintf("%s%s?op=CREATE&user.name=%s",$GLOBALS['webHDFSURL'],$hdfsPath,$GLOBALS['webHDFSUser']);
+            curl_setopt($ch, CURLOPT_URL, $opURL);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents($file));
+        } else {
+            $opURL=sprintf("%s%s?op=APPEND&user.name=%s",$GLOBALS['webHDFSURL'],$hdfsPath,$GLOBALS['webHDFSUser']);
+            curl_setopt($ch, CURLOPT_URL, $opURL);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents($file));
+        }
+        $result=curl_exec($ch);
+        $info = curl_getinfo($ch);
+        if ($info['http_code']==200) { // 成功
+            _notice("[%s][write_to: %s][sucessful]",__FUNCTION__,$hdfsPath);
+        } else {
+            _warn("[%s][write_to: %s][failed]",__FUNCTION__,$hdfsPath);
+        }
+
+    } catch (Exception $e) {
+        _error("Exception: %s", $e->getMessage());
+    }
+
+    return $rt;
+}
+
+/* }}} */
+
