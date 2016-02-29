@@ -64,7 +64,9 @@ try {
                 fclose($tmpFp);
 
                 // save log to hdfs
-                saveFileToHDFS($logTag,$tmpFile,$ts);
+                if (isset($GLOBALS['OPTIONS'][$logTag]) && strtolower($GLOBALS['OPTIONS'][$logTag]['save_to_hdfs'])=='yes') {
+                    saveFileToHDFS($logTag,$tmpFile,$ts);
+                }
 
                 @exec("{$GLOBALS['_sys']['rm']} -f {$logFile}");
             }

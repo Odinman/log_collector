@@ -308,6 +308,9 @@ function saveLogToFile($file,$content) {
 function saveFileToHDFS($logTag,$file,$ts=0) {
     $rt=false;
 
+    if ($ts<=0) {
+        $ts=time();
+    }
     try {
         $hdfsDir=sprintf("%s/%s/%s",$GLOBALS['logSaveRoot'],$logTag,date('Ym/d',$ts));
         $hdfsFile=sprintf("%s",date('H.\l\o\g',$ts));
